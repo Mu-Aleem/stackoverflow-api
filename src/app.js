@@ -19,8 +19,8 @@ app.use(express.json());
 app.use(cors());
 app.use(morgan("dev"));
 
-app.use("/auth", UserRoutes);
-app.use("/post", PostRoutes);
+app.use("/api/auth", UserRoutes);
+app.use("/api/posts", PostRoutes);
 
 app.get("/", (req, res) => {
   res.send("Welcome!");

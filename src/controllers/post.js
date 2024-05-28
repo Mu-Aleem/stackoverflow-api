@@ -138,4 +138,32 @@ const update = async (req, res, next) => {
   }
 };
 
-export { Create, Postlist, getPostById, deleteById, update };
+const toggleLikePost = async (req, res, next) => {
+  const postId = req.params.id;
+  const userId = req.userId; // Assuming userId is available in req object
+
+  try {
+    const post = await Post.findById(postId);
+    if (!post) {
+      return next(createHttpError(404, "Post not found"));
+    }
+
+    const index = post.likes.indexOf(userId);
+    if (index === -1) {
+      post.likes.push(userId);
+    } else {
+      post.likes.splice(index, 1);
+    }
+
+    await post.save();
+    res.status(200).json({
+      success: true,
+      data: post,
+    });
+  } catch (err) {
+    console.error("🚀 ~ toggleLikePost ~ err:", err);
+    return next(createHttpError(500, "Error while toggling like status."));
+  }
+};
+
+export { Create, Postlist, getPostById, deleteById, update, toggleLikePost };
